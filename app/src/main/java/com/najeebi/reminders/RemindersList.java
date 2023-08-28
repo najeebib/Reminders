@@ -255,22 +255,12 @@ public class RemindersList extends AppCompatActivity {
     {
         if(isAlarmOn(AlarmID,type))//if the alarm is on, cancel it
         {
-            if(type.equals("Notification"))
-            {
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                Intent alarmIntent = new Intent(this, ReminderNotificationReceiver.class);
-                PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
-                alarmManager.cancel(alarmPendingIntent);
-                alarmPendingIntent.cancel();
-            }
-            if(type.equals("Alarm"))
-            {
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                Intent alarmIntent = new Intent(this, ReminderAlarmReceiver.class);
-                PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
-                alarmManager.cancel(alarmPendingIntent);
-                alarmPendingIntent.cancel();
-            }
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent alarmIntent = new Intent(this, ReminderNotificationReceiver.class);
+            PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
+            alarmManager.cancel(alarmPendingIntent);
+            alarmPendingIntent.cancel();
         }
 
     }
@@ -495,55 +485,35 @@ public class RemindersList extends AppCompatActivity {
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Integer.parseInt(year),Integer.parseInt(month)-1,Integer.parseInt(dd),Integer.parseInt(hour),Integer.parseInt(min),0);
         AlarmManager manager = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
-        if(type.equals("Alarm"))
+
+
+
+        Intent intent = new Intent(this, ReminderNotificationReceiver.class);
+        intent.putExtra("TITLE", title);
+        intent.putExtra("NUM", id);
+        intent.putExtra("DocID",docID);
+        if(repeating)
         {
-            Intent intent = new Intent(this, ReminderAlarmReceiver.class);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("Date", alarmDate);
+            intent.putExtra("Type","Repeating");
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intent,0);
-            if(repeating)
-                manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
-            else
-                manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
+            manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
         }
         else
         {
-            Intent intent = new Intent(this, ReminderNotificationReceiver.class);
-            intent.putExtra("TITLE", title);
-            intent.putExtra("NUM", id);
-            intent.putExtra("DocID",docID);
-            if(repeating)
-            {
-                intent.putExtra("Type","Repeating");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intent,0);
-                manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
-            }
-            else
-            {
-                intent.putExtra("Type","One time");
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intent,0);
-                manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
-            }
+            intent.putExtra("Type","One time");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id,intent,0);
+            manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
         }
+
     }
     public boolean isAlarmOn(int AlarmID,String type)
     {
-        if(type.equals("Alarm"))
-        {
-            Intent alarmIntent = new Intent(this, ReminderAlarmReceiver.class);
-            PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
 
-            boolean alarmStatus = (alarmPendingIntent != null);
-            Log.d("mylog",">>> is Alarm ON? " + alarmStatus);
-            return alarmStatus;
-        }
-        else
-        {
-            Intent alarmIntent = new Intent(this, ReminderNotificationReceiver.class);
-            PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
-            boolean alarmStatus = (alarmPendingIntent != null);
-            Log.d("mylog",">>> is Alarm ON? " + alarmStatus);
-            return alarmStatus;
-        }
+        Intent alarmIntent = new Intent(this, ReminderNotificationReceiver.class);
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
+        boolean alarmStatus = (alarmPendingIntent != null);
+        Log.d("mylog",">>> is Alarm ON? " + alarmStatus);
+        return alarmStatus;
+
     }
 }

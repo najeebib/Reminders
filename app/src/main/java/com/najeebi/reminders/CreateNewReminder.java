@@ -132,8 +132,6 @@ public class CreateNewReminder extends AppCompatActivity {
                     addReminderToFirebase();
             }
         });
-        notification = (RadioButton) findViewById(R.id.notification);
-        alarm = (RadioButton) findViewById(R.id.alarm);
 
         CreateNotificationChannel();
     }
@@ -322,38 +320,21 @@ public class CreateNewReminder extends AppCompatActivity {
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Integer.parseInt(year),Integer.parseInt(month)-1,Integer.parseInt(dd),Integer.parseInt(hour),Integer.parseInt(min),0);
         AlarmManager manager = (AlarmManager)  getSystemService(Context.ALARM_SERVICE);
-        if(alarm.isChecked())
+
+
+        Intent intent = new Intent(this, ReminderNotificationReceiver.class);
+        intent.putExtra("TITLE", Title.getText().toString());
+        intent.putExtra("NUM", i);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intent,0);
+        if(repeating)
         {
-            Intent intent = new Intent(this, ReminderAlarmReceiver.class);
-            intent.putExtra("TITLE", Title.getText().toString());
-            intent.putExtra("Date",date_time_in.getText().toString());
-            if(repeating)
-            {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intent,0);
-                manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
-            }
-            else
-            {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intent,0);
-                manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
-            }
+            manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
         }
-        if(notification.isChecked())
+        else
         {
-            Intent intent = new Intent(this, ReminderNotificationReceiver.class);
-            intent.putExtra("TITLE", Title.getText().toString());
-            intent.putExtra("NUM", i);
-            if(repeating)
-            {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intent,0);
-                manager.setRepeating(manager.RTC_WAKEUP,cal.getTimeInMillis(),numberOfMinutes*60*1000,pendingIntent);
-            }
-            else
-            {
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this,i,intent,0);
-                manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
-            }
+            manager.setExactAndAllowWhileIdle(manager.RTC_WAKEUP,cal.getTimeInMillis(),pendingIntent);
         }
+
         i++;
         SharedPreferences prefs = this.getSharedPreferences("mypref", Context.MODE_PRIVATE);
         prefs.edit().putInt("AlarmID",i).apply();

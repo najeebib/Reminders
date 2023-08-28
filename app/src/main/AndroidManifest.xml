@@ -17,9 +17,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDNnhibnm1V_8Dpo7q7NKWLW6bOykNK7N8" />
-        <activity
-            android:name=".AlarmActivity"
-            android:exported="false" />
+
         <activity
             android:name=".CreateNewReminder"
             android:exported="false" />
@@ -40,7 +38,6 @@
         </activity>
 
         <receiver android:name=".ReminderNotificationReceiver" />
-        <receiver android:name=".ReminderAlarmReceiver" />
     </application>
 
 </manifest>
