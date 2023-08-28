@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateNewReminder">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+        <TextView
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Reminder Time"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:id="@+id/edtTxt_Date_Time"
+            android:hint="Select Date and Time"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:ems="10"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Reminder Title"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/edtTxt_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:ems="10"
+            android:inputType="textPersonName"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Repeat Reminder?"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <RadioButton
+            android:id="@+id/rdio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repeat Reminder?"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:onClick= "onClickRepeat"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="175dp"
+            android:layout_height="match_parent"
+            android:text="Reminder type"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alarm"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RadioGroup>
+
+
+
+    </LinearLayout>
+    <RadioButton
+        android:id="@+id/enableLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reminder go off on a specific location?"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:onClick="enableLocation"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="175dp"
+            android:id="@+id/TxtView_Location"
+            android:layout_height="wrap_content"
+            android:text="Reminder Location"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"/>
+
+        <EditText
+            android:id="@+id/edtTxt_Location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:visibility="invisible"/>
+    </LinearLayout>
+    <fragment
+        android:id="@+id/mapID"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="365dp" android:layout_weight="5"
+        android:visibility="invisible"/>
+    <Button
+        android:id="@+id/btnCreateReminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create reminder"
+        android:layout_weight="1"/>
+
+
+</LinearLayout>
