@@ -75,7 +75,7 @@ public class CreateNewReminder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_reminder);
-
+        //check if gps permission is given
         if(isPermissionToReadGPSLocationOK())
         {
             Log.d("mylog","OK - GPS Enabled & Location Permission Granted!");
@@ -85,7 +85,7 @@ public class CreateNewReminder extends AppCompatActivity {
         SupportMapFragment mapFragment =
                 (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.mapID);
         mapFragment.getView().setVisibility(View.INVISIBLE);
-
+        //show map
         mapFragment.getMapAsync(new OnMapReadyCallback()
         {
             @Override
@@ -189,11 +189,6 @@ public class CreateNewReminder extends AppCompatActivity {
             Toast.makeText(this, "Please enter a valid date", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(!alarm.isChecked() && !notification.isChecked())
-        {
-            Toast.makeText(this, "Please select alarm type", Toast.LENGTH_SHORT).show();
-            return false;
-        }
         if(locationEnable)
         {
             if(location.getText().toString().equalsIgnoreCase("") || reminderLocation == null)
@@ -278,10 +273,6 @@ public class CreateNewReminder extends AppCompatActivity {
         todo.put("Latitude",latitude);
         todo.put("Longitude",longitude);
 
-        if(alarm.isChecked())
-            todo.put("Type","Alarm");
-        if(notification.isChecked())
-            todo.put("Type","Notification");
         //add the reminder to firebase
         db.collection("Reminders")
                 .add(todo)

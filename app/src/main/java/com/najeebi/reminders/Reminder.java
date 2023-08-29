@@ -5,14 +5,13 @@ public class Reminder {
     private String date;//date of the reminder
     private  String location;//name of the location the reminder works on
     private String ID;//firebase ID
-    private boolean Repeat,locationEnabled;//if the reminder is a repeating one, if it sould work in a specific location
+    private boolean Repeat,locationEnabled;//if the reminder is a repeating one, if it should work in a specific location
     private int numberOfMinutes;//the number of minutes the reminder should repeat
     private int AlarmID;//Alarm id
-    private String type;//type of the alarm (NNotification or Alarm)
     private double latitude,longtitude;//the location of the reminder
 
 
-    public Reminder(String ReminderDesc, String date, String location,String id,boolean Repeat,int numberOfMinutes,int AlarmID,String type,boolean enable,double lat,double lng) {
+    public Reminder(String ReminderDesc, String date, String location,String id,boolean Repeat,int numberOfMinutes,int AlarmID,boolean enable,double lat,double lng) {
         this.ReminderDesc = ReminderDesc;
         this.date = date;
         this.location = location;
@@ -20,16 +19,12 @@ public class Reminder {
         this.Repeat = Repeat;
         this.numberOfMinutes = numberOfMinutes;
         this.AlarmID = AlarmID;
-        this.type = type;
         this.locationEnabled = enable;
         this.latitude = lat;
         this.longtitude = lng;
 
     }
 
-    public String getType() {
-        return type;
-    }
 
     public int getNumberOfMinutes() {
         return numberOfMinutes;

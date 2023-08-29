@@ -94,17 +94,15 @@ public class RemindersList extends AppCompatActivity {
                                             String title = document.get("Title").toString();
                                             int alarmId = Integer.parseInt(document.get("AlarmID").toString());
                                             String docId = document.getId();
-                                            String type = document.get("Type").toString();
                                             boolean repeating = (boolean)document.get("Repeating");
                                             int numOfminutes = Integer.parseInt(document.get("number_of_minutes").toString());
-                                            setUpAlarm(timeStamp,title,alarmId,docId,type,repeating,numOfminutes);
+                                            setUpAlarm(timeStamp,title,alarmId,docId,repeating,numOfminutes);
                                         }
                                         else
                                         {//if the location changed, cancel any location reminder that isnt close to the new location
                                             int alarmId = Integer.parseInt(document.get("AlarmID").toString());
-                                            String type = document.get("Type").toString();
-                                            if(isAlarmOn(alarmId,type))
-                                                cancelAlarm(alarmId,type);
+                                            if(isAlarmOn(alarmId))
+                                                cancelAlarm(alarmId);
                                         }
                                     }
 
@@ -160,7 +158,7 @@ public class RemindersList extends AppCompatActivity {
                             Date timeStamp = ((com.google.firebase.Timestamp) document.get("Time")).toDate();
                             Reminder rem = new Reminder(document.get("Title").toString(),sfd.format(timeStamp),document.get("Location").toString(),
                                     document.getId(),(boolean) document.get("Repeating"),Integer.parseInt(document.get("number_of_minutes").toString()),
-                                    Integer.parseInt(document.get("AlarmID").toString()),document.get("Type").toString(),
+                                    Integer.parseInt(document.get("AlarmID").toString()),
                                     (boolean) document.get("Location_enabled"),Double.parseDouble(document.get("Latitude").toString()),
                                     Double.parseDouble(document.get("Longitude").toString()));
                             data.add(rem);
@@ -189,9 +187,8 @@ public class RemindersList extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Reminder del = data.get(pos);
                         int AlarmID = del.getAlarmID();
-                        String type = del.getType();
-                        if(isAlarmOn(AlarmID,type))
-                            cancelAlarm(AlarmID,type);
+                        if(isAlarmOn(AlarmID))
+                            cancelAlarm(AlarmID);
                         db.collection("Reminders").document(del.getID()).delete();
                         data.remove(pos);
                         adapter.notifyDataSetChanged();
@@ -251,9 +248,9 @@ public class RemindersList extends AppCompatActivity {
     }
 
 
-    public void cancelAlarm(int AlarmID,String type)
+    public void cancelAlarm(int AlarmID)
     {
-        if(isAlarmOn(AlarmID,type))//if the alarm is on, cancel it
+        if(isAlarmOn(AlarmID))//if the alarm is on, cancel it
         {
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -265,18 +262,10 @@ public class RemindersList extends AppCompatActivity {
 
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {//display three dots option menue
+    public boolean onCreateOptionsMenu(Menu menu) {//display three dots option menu
         super.onCreateOptionsMenu(menu);
-        MenuItem item1 = menu.add("Settings");
         MenuItem item2 = menu.add("About Us");
         MenuItem item3 = menu.add("Exit");
-        item1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                goToSettings();
-                return false;
-            }
-        });
         item2.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -294,13 +283,8 @@ public class RemindersList extends AppCompatActivity {
         });
         return true;
     }
-    public void goToSettings()
-    {
-        Intent intent = new Intent(this,Settings.class);
-        startActivity(intent);
-    }
     public void DisplayAboutUs()//display app information
-    {
+    {//display the about us window
         AlertDialog.Builder mydialog = new AlertDialog.Builder(RemindersList.this);
         mydialog.setTitle("APP information");
         final TextView appname = new TextView(RemindersList.this);
@@ -332,7 +316,7 @@ public class RemindersList extends AppCompatActivity {
     }
 
     public void goToCreateActivity(View v)
-    {
+    {//go the the create reminder page
         Intent intent = new Intent(this,CreateNewReminder.class);
         SharedPreferences prefs = this.getSharedPreferences("mypref", Context.MODE_PRIVATE);
         int i = prefs.getInt("AlarmID",-1);
@@ -411,9 +395,9 @@ public class RemindersList extends AppCompatActivity {
                                                     docID[0] = documentReference.getId();
                                                     SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                                     //add reminder to list and set up alarm
-                                                    Reminder rem = new Reminder(title,sfd.format(eventDate),location,docID[0],false,-1, finalI,"Notification",false,0,0);
+                                                    Reminder rem = new Reminder(title,sfd.format(eventDate),location,docID[0],false,-1, finalI,false,0,0);
                                                     adapter.add(rem);
-                                                    setUpAlarm(timeStamp,title, finalI,docID[0],"Notification",false,-1);
+                                                    setUpAlarm(timeStamp,title, finalI,docID[0],false,-1);
                                                 } else {
                                                     Log.d("mylog", "Current data: null");
                                                 }
@@ -464,7 +448,7 @@ public class RemindersList extends AppCompatActivity {
             return false;
         }
     }
-    public void setUpAlarm(Date date,String title,int id,String docID,String type,boolean repeating,int numberOfMinutes)
+    public void setUpAlarm(Date date,String title,int id,String docID,boolean repeating,int numberOfMinutes)
     {
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String strDate = sfd.format(date);
@@ -506,9 +490,8 @@ public class RemindersList extends AppCompatActivity {
         }
 
     }
-    public boolean isAlarmOn(int AlarmID,String type)
-    {
-
+    public boolean isAlarmOn(int AlarmID)
+    {//check if the alarm is on
         Intent alarmIntent = new Intent(this, ReminderNotificationReceiver.class);
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, AlarmID, alarmIntent, PendingIntent.FLAG_NO_CREATE);
         boolean alarmStatus = (alarmPendingIntent != null);
